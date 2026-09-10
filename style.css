@@ -1,0 +1,104 @@
+:root{
+  --blue:#1257a6;
+  --blue-soft:#eef5ff;
+  --green:#2f8f46;
+  --green-soft:#eaf7ed;
+  --amber:#e3a20c;
+  --amber-soft:#fff7df;
+  --ink:#20252b;
+  --muted:#68717d;
+  --line:#e4e8ed;
+  --bg:#f5f7f9;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
+html{font-size:18px}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  line-height:1.65;
+}
+button{font:inherit}
+.app{max-width:720px;margin:0 auto;min-height:100vh;background:#fff}
+header{
+  position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);
+  padding:18px 20px 14px;
+}
+.brand{font-size:.86rem;color:var(--muted);font-weight:700}
+.title-row{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-top:2px}
+h1{font-size:1.28rem;margin:0;letter-spacing:-.03em}
+.counter{font-weight:900;font-size:1rem;white-space:nowrap;color:var(--blue)}
+.segment-bar{display:grid;grid-template-columns:repeat(32,1fr);gap:3px;margin-top:13px}
+.segment{
+  height:9px;border-radius:3px;background:#dfe4e9;
+  transition:.2s;
+}
+.segment.known{background:var(--green)}
+.segment.review{background:var(--amber)}
+.segment.current{outline:2px solid #26313d;outline-offset:1px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:.75rem}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%;background:#dfe4e9}
+.dot.known{background:var(--green)} .dot.review{background:var(--amber)}
+main{padding:22px 20px 32px}
+.category{
+  display:inline-block;padding:5px 11px;border-radius:999px;background:var(--blue-soft);
+  color:var(--blue);font-size:.78rem;font-weight:800;margin-bottom:12px
+}
+.question-number{color:var(--muted);font-size:.84rem;font-weight:700;margin-bottom:5px}
+.question{
+  font-size:1.42rem;line-height:1.48;letter-spacing:-.035em;font-weight:900;margin:0 0 20px;
+  word-break:keep-all
+}
+.blue{color:var(--blue);font-weight:900}
+.think-card{
+  border:1px solid var(--line);border-radius:18px;padding:18px;background:#fafbfd;margin-bottom:14px
+}
+.think-title{font-weight:900;font-size:1rem}
+.think-sub{margin-top:3px;color:var(--muted);font-size:.88rem}
+.primary{
+  width:100%;min-height:62px;border:0;border-radius:15px;background:var(--blue);color:#fff;
+  font-weight:900;font-size:1.08rem;cursor:pointer
+}
+.answer-card{
+  display:none;border:2px solid #d9e7f8;border-radius:18px;padding:20px 19px;background:#fff;margin-top:14px
+}
+.answer-card.show{display:block}
+.answer-label{font-size:.82rem;color:var(--blue);font-weight:900;margin-bottom:8px}
+.answer{font-size:1.15rem;line-height:1.75;font-weight:700;word-break:keep-all}
+.actions{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.actions.show{display:grid}
+.action{
+  min-height:64px;border-radius:15px;border:2px solid transparent;font-weight:900;cursor:pointer;
+}
+.known-btn{background:var(--green-soft);border-color:#b9dfc1;color:#1d6d31}
+.review-btn{background:var(--amber-soft);border-color:#f0d37c;color:#7b5700}
+.status{
+  display:none;text-align:center;padding:12px;border-radius:13px;margin-top:14px;font-size:.9rem;font-weight:800
+}
+.status.show{display:block}
+.status.known{background:var(--green-soft);color:#1d6d31}
+.status.review{background:var(--amber-soft);color:#7b5700}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.nav button{
+  min-height:56px;border:1px solid #ccd3da;border-radius:14px;background:#fff;font-weight:900;color:#303943;cursor:pointer
+}
+.nav button:disabled{opacity:.35;cursor:default}
+.tools{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px}
+.toolbtn{
+  border:0;background:#f0f3f6;border-radius:12px;padding:10px 12px;color:#4b5560;font-size:.82rem;font-weight:800;cursor:pointer
+}
+.summary{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.84rem;text-align:center}
+@media(max-width:480px){
+  html{font-size:17px}
+  header{padding:15px 16px 12px}
+  main{padding:19px 16px 28px}
+  .question{font-size:1.35rem}
+  .answer{font-size:1.12rem}
+  .segment-bar{gap:2px}
+  .segment{height:8px}
+}
+@media(min-width:721px){
+  body{padding:20px 0}
+  .app{border-radius:22px;box-shadow:0 8px 30px rgba(27,39,51,.08);overflow:hidden;min-height:calc(100vh - 40px)}
+}
