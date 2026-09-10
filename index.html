@@ -127,12 +127,6 @@ function highlightText(text, words){
   return escapeHtml(text).replace(re, '<span class="blue">$1</span>');
 }
 
-function formatAnswer(text){
-  return String(text)
-    .replace(/,\s*/g, ",\n")
-    .replace(/\.\s+(?=[가-힣A-Za-z0-9])/g, ".\n");
-}
-
 function currentQuestion(){
   const number = session.queue[session.position];
   return QUESTIONS.find(q => q.number === number);
@@ -185,7 +179,7 @@ function renderQuestion(){
   $("qNo").textContent = `문제 ${q.number}`;
   $("category").textContent = q.category;
   $("question").innerHTML = highlightText(q.question, q.qHighlights);
-  $("answer").innerHTML = highlightText(formatAnswer(q.answer), q.highlights);
+  $("answer").innerHTML = highlightText(q.answer, q.highlights);
 
   $("flipCard").classList.remove("flipped");
   $("flipCard").style.height = "152px";
