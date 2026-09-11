@@ -171,3 +171,9 @@ main{padding:18px 20px 30px}
 }
 .kakao-share-btn:active{transform:translateY(1px)}
 .round-end.complete .round-end-text{line-height:1.75}
+
+/* 8차 추가: 모바일에서 아래로 당겨 새로고침(Pull-to-refresh) 방지 */
+html, body {
+  overscroll-behavior-y: none;
+}
+
