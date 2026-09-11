@@ -240,9 +240,14 @@ function finishRound(){
     $("roundEnd").classList.add("complete");
     $("roundEndIcon").textContent = "✓";
     $("roundEndTitle").textContent = "🎉 모든 문제를 완료했습니다!";
+    const roundText = session.round === 1
+      ? "총 1바퀴 만에 완료하셨습니다. 🎉"
+      : `총 ${session.round}바퀴 반복하여 완료하셨습니다. 👍`;
+
     $("roundEndText").innerHTML =
       "훌륭합니다, 선생님!<br>" +
-      "모든 예상질문을 ‘알겠어요’로 완료하셨습니다.<br><br>" +
+      "모든 예상질문을 ‘알겠어요’로 완료하셨습니다.<br>" +
+      `<strong>${roundText}</strong><br><br>` +
       "지금처럼 가끔씩 반복해서 연습하시면<br>" +
       "평가 면담도 자신 있게 하실 수 있습니다.<br><br>" +
       "수고하셨습니다. 😊<br>" +
@@ -384,9 +389,15 @@ function formatCompletionTime(date){
 }
 
 function buildShareText(){
+  const roundText = session.round === 1
+    ? "총 1바퀴 만에 완료했습니다. 🎉"
+    : `총 ${session.round}바퀴 반복하여 완료했습니다. 👍`;
+
   return [
     "🎉 평가 면담 예상질문 학습을 모두 완료했습니다!",
     `${QUESTIONS.length}문항 모두 ‘알겠어요’ 완료했습니다.`,
+    "",
+    roundText,
     "",
     `완료 일시: ${formatCompletionTime(new Date())}`,
     "원주연세재가복지센터"
