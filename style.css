@@ -160,3 +160,14 @@ main{padding:18px 20px 30px}
   body{padding:20px 0}
   .app{border-radius:22px;box-shadow:0 8px 30px rgba(27,39,51,.08);overflow:hidden;min-height:calc(100vh - 40px)}
 }
+
+
+/* 8차: 완료화면 / 카카오톡 공유 */
+.flip-card.no-transition{transition:none !important}
+.kakao-share-btn{
+  display:none;width:100%;min-height:61px;margin-top:10px;
+  border:0;border-radius:15px;background:#FEE500;color:#191919;
+  font-weight:950;cursor:pointer;
+}
+.kakao-share-btn:active{transform:translateY(1px)}
+.round-end.complete .round-end-text{line-height:1.75}

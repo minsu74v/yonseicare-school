@@ -42,7 +42,7 @@
     </section>
 
     <div id="studyScreen" style="display:none">
-    <section class="question-card">
+    <section class="question-card" id="questionCard">
       <div class="question-meta">
         <span class="question-number" id="qNo">문제 1</span>
         <span class="category" id="category"></span>
@@ -77,6 +77,7 @@
       <div class="round-end-text" id="roundEndText"></div>
       <button class="round-next-btn" id="roundNextBtn">다시 볼 문제로 가기</button>
       <button class="restart-btn" id="restartBtn" type="button">처음부터 다시 하기</button>
+      <button class="kakao-share-btn" id="kakaoShareBtn" type="button">💬 담당 사회복지사에게 자랑하기</button>
     </section>
 
     <div class="nav" id="navArea">
@@ -93,9 +94,14 @@
 </div>
 
 <script src="questions.js"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js"
+  integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J"
+  crossorigin="anonymous"></script>
 <script>
 const STORAGE_KEY = "yonseicare-school-progress-v2";
 const SESSION_KEY = "yonseicare-school-session-v2";
+// 카카오톡 직접 공유를 사용하려면 카카오디벨로퍼스의 JavaScript 키를 아래 따옴표 안에 넣습니다.
+const KAKAO_JAVASCRIPT_KEY = "";
 let states = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 let largeFont = false;
 
@@ -162,6 +168,7 @@ function renderCounts(){
 
 function hideRoundEnd(){
   $("roundEnd").classList.remove("show", "complete");
+  $("questionCard").style.display = "block";
   $("navArea").style.display = "grid";
   $("flipWrap").style.display = "block";
   $("actions").style.display = "";
@@ -170,6 +177,7 @@ function hideRoundEnd(){
 
 function renderQuestion(){
   session.ended = false;
+  $("questionCard").style.display = "block";
   const q = currentQuestion();
 
   $("counter").textContent = session.round === 1
@@ -212,6 +220,8 @@ function finishRound(){
   session.ended = true;
   const retry = QUESTIONS.filter(q => states[q.number] !== "known").map(q => q.number);
 
+  // 완료/회차 종료 화면에서는 마지막 문제 카드가 남아 보이지 않도록 숨깁니다.
+  $("questionCard").style.display = "none";
   $("flipWrap").style.display = "none";
   $("actions").classList.remove("show");
   $("actions").style.display = "none";
@@ -222,17 +232,26 @@ function finishRound(){
   if(retry.length === 0){
     $("roundEnd").classList.add("complete");
     $("roundEndIcon").textContent = "✓";
-    $("roundEndTitle").textContent = "훌륭합니다!";
-    $("roundEndText").innerHTML = "모든 문제를 알고 계시는군요!<br>주기적인 반복학습을 권장드립니다.";
+    $("roundEndTitle").textContent = "🎉 모든 문제를 완료했습니다!";
+    $("roundEndText").innerHTML =
+      "훌륭합니다, 선생님!<br>" +
+      "모든 예상질문을 ‘알겠어요’로 완료하셨습니다.<br><br>" +
+      "지금처럼 가끔씩 반복해서 연습하시면<br>" +
+      "평가 면담도 자신 있게 하실 수 있습니다.<br><br>" +
+      "수고하셨습니다. 😊<br>" +
+      "<strong>원주연세재가복지센터</strong>";
     $("roundNextBtn").style.display = "none";
     $("restartBtn").style.display = "block";
+    $("kakaoShareBtn").style.display = "block";
     $("counter").textContent = "모두 완료";
   } else {
+    $("roundEnd").classList.remove("complete");
     $("roundEndIcon").textContent = "↻";
     $("roundEndTitle").textContent = `${session.round}바퀴를 마쳤습니다.`;
     $("roundEndText").innerHTML = `다시 볼 문제가 <strong>${retry.length}개</strong> 있습니다.<br>알겠어요가 될 때까지 다시 확인해 보세요.`;
     $("roundNextBtn").style.display = "block";
     $("restartBtn").style.display = "none";
+    $("kakaoShareBtn").style.display = "none";
     $("counter").textContent = `다시 볼 문제 ${retry.length}`;
   }
 
@@ -242,6 +261,19 @@ function finishRound(){
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
+function prepareForQuestionChange(){
+  // 뒤집힌 답변 면을 즉시 앞면으로 되돌린 뒤 다음 문항을 그려
+  // 다음 문제의 답이 회전 도중 순간적으로 비치는 현상을 막습니다.
+  const card = $("flipCard");
+  card.classList.add("no-transition");
+  card.classList.remove("flipped");
+  card.style.height = "152px";
+  $("actions").classList.remove("show");
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => card.classList.remove("no-transition"));
+  });
+}
+
 function markState(state){
   const q = currentQuestion();
   states[q.number] = state;
@@ -249,13 +281,16 @@ function markState(state){
   renderSegments();
   renderCounts();
 
+  // 다음 문제로 넘어가기 전에 답변 면을 먼저 완전히 숨깁니다.
+  prepareForQuestionChange();
+
   if(session.position === session.queue.length - 1){
-    setTimeout(finishRound, 220);
+    setTimeout(finishRound, 120);
   } else {
     setTimeout(() => {
       session.position++;
       renderQuestion();
-    }, 260);
+    }, 120);
   }
 }
 
@@ -329,10 +364,65 @@ $("resetBtn").onclick = () => {
   }
 };
 
+
+function formatCompletionTime(date){
+  const yy = String(date.getFullYear()).slice(-2);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour24 = date.getHours();
+  const ampm = hour24 < 12 ? "오전" : "오후";
+  const hour12 = hour24 % 12 || 12;
+  const minute = String(date.getMinutes()).padStart(2, "0");
+  return `${yy}년 ${month}월 ${day}일 ${ampm} ${hour12}:${minute}`;
+}
+
+function buildShareText(){
+  return [
+    "🎉 평가 면담 예상질문 학습을 모두 완료했습니다!",
+    `${QUESTIONS.length}문항 모두 ‘알겠어요’ 완료했습니다.`,
+    "",
+    `완료 일시: ${formatCompletionTime(new Date())}`,
+    "원주연세재가복지센터"
+  ].join("\n");
+}
+
+function initKakaoShare(){
+  if(!KAKAO_JAVASCRIPT_KEY) return false;
+  if(typeof Kakao === "undefined") return false;
+  try{
+    if(!Kakao.isInitialized()) Kakao.init(KAKAO_JAVASCRIPT_KEY);
+    return Kakao.isInitialized();
+  }catch(e){
+    console.error(e);
+    return false;
+  }
+}
+
+$("kakaoShareBtn").onclick = () => {
+  const ok = confirm("카톡으로 문제를 완료했음을 담당 사회복지사에게 자랑하세요! 답장은 오지 않을 수 있습니다^^;");
+  if(!ok) return;
+
+  if(!initKakaoShare()){
+    alert("카카오톡 직접 공유를 위한 1회 설정이 아직 필요합니다. 카카오 JavaScript 키를 연결한 뒤 사용할 수 있습니다.");
+    return;
+  }
+
+  Kakao.Share.sendDefault({
+    objectType: "text",
+    text: buildShareText(),
+    link: {
+      mobileWebUrl: "https://minsu74v.github.io/yonseicare-school/",
+      webUrl: "https://minsu74v.github.io/yonseicare-school/"
+    },
+    buttonTitle: "학습 사이트 열기"
+  });
+};
+
 function setFontSize(isLarge){
   largeFont = isLarge;
   document.documentElement.classList.toggle("large-text", largeFont);
   $("fontLabel").textContent = largeFont ? "글자 작게" : "글자 크게";
+  document.querySelector(".font-icon").textContent = largeFont ? "가-" : "가+";
   if($("flipCard").classList.contains("flipped")){
     requestAnimationFrame(() => $("flipCard").style.height = `${$("answerCard").scrollHeight}px`);
   }
