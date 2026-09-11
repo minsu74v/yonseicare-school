@@ -57,7 +57,7 @@
           <span>답 확인하기</span>
         </button>
 
-        <section class="flip-face flip-back answer-card" id="answerCard" aria-live="polite">
+        <section class="flip-face flip-back answer-card" id="answerCard" aria-live="polite" role="button" tabindex="0" aria-label="답변 닫기">
           <div class="answer-label"><span class="answer-badge">A</span><span>답변</span></div>
           <div class="answer" id="answer"></div>
         </section>
@@ -164,7 +164,7 @@ function hideRoundEnd(){
   $("roundEnd").classList.remove("show", "complete");
   $("navArea").style.display = "grid";
   $("flipWrap").style.display = "block";
-  $("actions").style.display = "grid";
+  $("actions").style.display = "";
   $("status").style.display = "";
 }
 
@@ -183,6 +183,7 @@ function renderQuestion(){
   $("flipCard").classList.remove("flipped");
   $("flipCard").style.height = "152px";
   $("actions").classList.remove("show");
+  $("actions").style.display = "";
   $("status").className = "status";
   $("status").style.display = "none";
   $("flipWrap").style.display = "block";
@@ -193,10 +194,11 @@ function renderQuestion(){
 
   if(states[q.number]){
     const st = states[q.number];
-    $("status").className = `status ${st}`;
+    $("status").className = `status ${st} show`;
     $("status").textContent = st === "known"
-      ? "이 문제는 ‘알겠어요’로 표시되어 있습니다."
-      : "이 문제는 ‘한 번 더 보기’로 표시되어 있습니다.";
+      ? "이 문제에는 ‘알겠어요’로 표시되어 있습니다."
+      : "이 문제에는 ‘한 번 더 보기’로 표시되어 있습니다.";
+    $("status").style.display = "block";
   }
 
   $("roundEnd").classList.remove("show", "complete");
@@ -261,10 +263,19 @@ $("showAnswer").onclick = () => {
   $("flipCard").style.height = `${Math.max(152, $("answerCard").scrollHeight)}px`;
   $("flipCard").classList.add("flipped");
   $("actions").classList.add("show");
-  const q = currentQuestion();
-  if(states[q.number]){
-    $("status").classList.add("show");
-    $("status").style.display = "block";
+};
+
+function hideAnswer(){
+  $("flipCard").classList.remove("flipped");
+  $("flipCard").style.height = "152px";
+  $("actions").classList.remove("show");
+}
+
+$("answerCard").onclick = hideAnswer;
+$("answerCard").onkeydown = (e) => {
+  if(e.key === "Enter" || e.key === " "){
+    e.preventDefault();
+    hideAnswer();
   }
 };
 
