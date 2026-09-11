@@ -27,19 +27,18 @@
 
   <main>
     <section class="intro-screen" id="introScreen">
-      <div class="intro-hello">안녕하세요 선생님!</div>
-      <div class="intro-text">
-        평가 시 공단직원이 선생님께 직접 할 수 있는<br>
-        <strong>예상질문 연습</strong>입니다.<br><br>
-        주기적인 반복학습을 해주시면 큰 도움이 됩니다.
+      <div class="intro-card">
+        <div class="intro-hello">안녕하세요, 선생님!</div>
+        <div class="intro-text">
+          공단 평가에서 나올 수 있는<br>
+          <strong>예상 질문을 미리 연습해 보세요.</strong><br><br>
+          어렵게 외우지 않으셔도 됩니다.<br>
+          <strong>여러 번 반복하면 자연스럽게 익숙해집니다.</strong>
+        </div>
+        <div class="intro-center">원주연세재가복지센터</div>
       </div>
-      <div class="intro-center">원주연세재가복지센터</div>
       <button class="start-btn" id="startBtn" type="button">학습 시작하기</button>
-      <div class="copyright-note">
-        본 학습자료 및 사이트의 저작권은 원주연세재가복지센터에 있습니다.<br>
-        허가 없는 복제·배포·수정·재사용 및 영리적 이용을 금하며,<br>
-        위반 시 관련 법령에 따른 책임이 발생할 수 있습니다.
-      </div>
+      <div class="copyright-note">© 원주연세재가복지센터. 본 학습자료의 무단 복제·배포 및 상업적 이용을 금합니다.</div>
     </section>
 
     <div id="studyScreen" style="display:none">
@@ -86,7 +85,7 @@
     </div>
 
     <div class="tools">
-      <button class="toolbtn" id="fontBtn">가+ 글자 크게</button>
+      <button class="toolbtn font-tool" id="fontBtn"><span class="font-icon">가+</span><span id="fontLabel">글자 크게</span></button>
       <button class="toolbtn" id="resetBtn">진행기록 초기화</button>
     </div>
     </div>
@@ -98,7 +97,7 @@
 const STORAGE_KEY = "yonseicare-school-progress-v2";
 const SESSION_KEY = "yonseicare-school-session-v2";
 let states = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-let largeFont = localStorage.getItem("yonseicare-large-font") === "1";
+let largeFont = false;
 
 let session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
 if (!session || !Array.isArray(session.queue) || session.queue.some(n => !QUESTIONS.some(q => q.number === n))) {
@@ -294,6 +293,7 @@ $("restartBtn").onclick = () => {
   states = {};
   session = {round:1, queue:QUESTIONS.map(q=>q.number), position:0, ended:false};
   save();
+  setFontSize(false);
   hideRoundEnd();
   $("introScreen").style.display = "none";
   $("studyScreen").style.display = "block";
@@ -301,6 +301,7 @@ $("restartBtn").onclick = () => {
 };
 
 $("startBtn").onclick = () => {
+  setFontSize(false);
   $("introScreen").style.display = "none";
   $("studyScreen").style.display = "block";
   if(session.ended) finishRound();
@@ -317,20 +318,18 @@ $("resetBtn").onclick = () => {
   }
 };
 
-$("fontBtn").onclick = () => {
-  largeFont = !largeFont;
-  localStorage.setItem("yonseicare-large-font", largeFont ? "1" : "0");
-  document.documentElement.style.fontSize = largeFont ? "21px" : "18px";
-  $("fontBtn").textContent = largeFont ? "가− 기본 글자" : "가+ 글자 크게";
+function setFontSize(isLarge){
+  largeFont = isLarge;
+  document.documentElement.classList.toggle("large-text", largeFont);
+  $("fontLabel").textContent = largeFont ? "글자 작게" : "글자 크게";
   if($("flipCard").classList.contains("flipped")){
     requestAnimationFrame(() => $("flipCard").style.height = `${$("answerCard").scrollHeight}px`);
   }
-};
-
-if(largeFont){
-  document.documentElement.style.fontSize = "21px";
-  $("fontBtn").textContent = "가− 기본 글자";
 }
+
+$("fontBtn").onclick = () => setFontSize(!largeFont);
+setFontSize(false);
+
 
 renderSegments();
 renderCounts();
