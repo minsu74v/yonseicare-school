@@ -100,6 +100,19 @@
   </main>
 </div>
 
+  <div class="resume-modal" id="resumeModal" aria-hidden="true">
+    <div class="resume-modal-backdrop"></div>
+    <div class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeTitle">
+      <div class="resume-icon">↻</div>
+      <div class="resume-title" id="resumeTitle">이전에 학습한 기록이 있습니다.</div>
+      <div class="resume-text">이어서 학습하시겠어요?</div>
+      <div class="resume-buttons">
+        <button class="resume-continue-btn" id="resumeContinueBtn" type="button">이어서 하기</button>
+        <button class="resume-restart-btn" id="resumeRestartBtn" type="button">처음부터 하기</button>
+      </div>
+    </div>
+  </div>
+
 <script src="questions.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js"
   integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J"
@@ -176,7 +189,7 @@ function renderCounts(){
 function hideRoundEnd(){
   $("roundEnd").classList.remove("show", "complete");
   $("questionCard").style.display = "block";
-  $("navArea").style.display = "grid";
+  $("navArea").style.display = "flex";
   $("flipWrap").style.display = "block";
   $("actions").style.display = "";
   $("status").style.display = "";
@@ -202,7 +215,7 @@ function renderQuestion(){
   $("status").className = "status";
   $("status").style.display = "none";
   $("flipWrap").style.display = "block";
-  $("navArea").style.display = "grid";
+  $("navArea").style.display = "flex";
 
   $("prevBtn").disabled = session.position === 0;
   $("nextBtn").disabled = session.position === session.queue.length - 1;
@@ -358,12 +371,49 @@ $("restartBtn").onclick = () => {
   renderQuestion();
 };
 
-$("startBtn").onclick = () => {
+function hasSavedProgress(){
+  const markedCount = QUESTIONS.filter(q => states[q.number] === "known" || states[q.number] === "review").length;
+  return markedCount > 0 || session.round > 1 || session.position > 0 || session.ended;
+}
+
+function openResumeModal(){
+  $("resumeModal").classList.add("show");
+  $("resumeModal").setAttribute("aria-hidden", "false");
+}
+
+function closeResumeModal(){
+  $("resumeModal").classList.remove("show");
+  $("resumeModal").setAttribute("aria-hidden", "true");
+}
+
+function enterStudy(){
   setFontSize(false);
   $("introScreen").style.display = "none";
   $("studyScreen").style.display = "block";
   if(session.ended) finishRound();
   else renderQuestion();
+}
+
+$("startBtn").onclick = () => {
+  setFontSize(false);
+  if(hasSavedProgress()){
+    openResumeModal();
+  } else {
+    enterStudy();
+  }
+};
+
+$("resumeContinueBtn").onclick = () => {
+  closeResumeModal();
+  enterStudy();
+};
+
+$("resumeRestartBtn").onclick = () => {
+  states = {};
+  session = {round:1, queue:QUESTIONS.map(q=>q.number), position:0, ended:false};
+  save();
+  closeResumeModal();
+  enterStudy();
 };
 
 $("resetBtn").onclick = () => {

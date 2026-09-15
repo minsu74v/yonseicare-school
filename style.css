@@ -177,3 +177,44 @@ html, body {
   overscroll-behavior-y: none;
 }
 
+
+
+/* 8차 추가: 이전 학습기록 이어하기 선택창 */
+.resume-modal{
+  display:none;position:fixed;inset:0;z-index:1000;
+  align-items:center;justify-content:center;padding:22px;
+}
+.resume-modal.show{display:flex}
+.resume-modal-backdrop{
+  position:absolute;inset:0;background:rgba(28,36,45,.42);
+}
+.resume-dialog{
+  position:relative;z-index:1;width:min(100%,430px);
+  background:#fff;border-radius:20px;padding:25px 20px 20px;text-align:center;
+  box-shadow:0 18px 50px rgba(20,30,40,.22);
+}
+.resume-icon{
+  width:50px;height:50px;margin:0 auto 12px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--blue-soft);color:var(--blue);font-size:1.45rem;font-weight:950;
+}
+.resume-title{font-size:1.12rem;font-weight:950;letter-spacing:-.03em}
+.resume-text{margin-top:5px;color:#59636e;font-size:.96rem;font-weight:750}
+.resume-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.resume-buttons button{min-height:56px;border-radius:14px;font-weight:900;cursor:pointer}
+.resume-continue-btn{border:0;background:var(--blue);color:#fff}
+.resume-restart-btn{border:1px solid #ccd3da;background:#fff;color:#46515d}
+
+/* 이전/다음은 보조 기능: 한 줄에서 화면 좌우 끝에 고정 */
+.nav{
+  display:flex !important;
+  flex-direction:row !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  width:100% !important;
+  gap:0 !important;
+}
+.nav button{
+  flex:0 0 38px !important;
+  width:38px !important;height:38px !important;
+}
