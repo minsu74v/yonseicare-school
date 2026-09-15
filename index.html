@@ -578,8 +578,13 @@ let deferredInstallPrompt = null;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
-  $("installBtn").classList.add("available");
-  updateInstallButton();
+
+  const btn = $("installBtn");
+  if(btn){
+    btn.classList.add("available");
+    btn.style.display = "inline-flex";
+    btn.textContent = "📱 앱 설치하기";
+  }
 });
 
 window.addEventListener("appinstalled", () => {
@@ -598,6 +603,13 @@ function updateInstallButton(){
 
   if(isStandaloneApp()){
     btn.style.display = "none";
+    return;
+  }
+
+  // 실제 PWA 설치 이벤트가 준비된 환경이면 브라우저 종류와 상관없이 설치 버튼으로 표시
+  if(deferredInstallPrompt){
+    btn.style.display = "inline-flex";
+    btn.textContent = "📱 앱 설치하기";
     return;
   }
 
