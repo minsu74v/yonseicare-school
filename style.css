@@ -246,3 +246,38 @@ html, body {
 .share-buttons button{min-height:56px;border-radius:14px;font-weight:900;cursor:pointer}
 .share-send-btn{border:0;background:#FEE500;color:#191919}
 .share-cancel-btn{border:1px solid #ccd3da;background:#fff;color:#59636e}
+
+
+/* 8차 추가: 첫 화면 하단 PWA 설치 버튼 */
+.install-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:13px auto 0;padding:7px 11px;
+  border:1px solid #d8dee5;border-radius:10px;background:#fff;
+  color:#66717c;font-size:.72rem;font-weight:800;cursor:pointer;
+}
+.install-btn.available{color:var(--blue);border-color:#bfd3eb;background:#f7fbff}
+.install-btn:active{transform:translateY(1px)}
+
+/* 설치 안내 자체 팝업 */
+.install-modal{
+  display:none;position:fixed;inset:0;z-index:1000;
+  align-items:center;justify-content:center;padding:22px;
+}
+.install-modal.show{display:flex}
+.install-modal-backdrop{position:absolute;inset:0;background:rgba(28,36,45,.42)}
+.install-dialog{
+  position:relative;z-index:1;width:min(100%,430px);
+  background:#fff;border-radius:20px;padding:25px 20px 20px;text-align:center;
+  box-shadow:0 18px 50px rgba(20,30,40,.22);
+}
+.install-icon{
+  width:50px;height:50px;margin:0 auto 12px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--blue-soft);font-size:1.35rem;
+}
+.install-title{font-size:1.12rem;font-weight:950;letter-spacing:-.03em}
+.install-text{margin-top:8px;color:#59636e;font-size:.93rem;line-height:1.7;font-weight:750}
+.install-close-btn{
+  width:100%;min-height:54px;margin-top:19px;border:0;border-radius:14px;
+  background:var(--blue);color:#fff;font-weight:900;cursor:pointer;
+}

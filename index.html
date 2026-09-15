@@ -46,6 +46,7 @@
       </div>
       <button class="start-btn" id="startBtn" type="button">학습 시작하기</button>
       <div class="copyright-note">© 원주연세재가복지센터. 본 학습자료의 무단 복제·배포 및 상업적 이용을 금합니다.</div>
+      <button class="install-btn" id="installBtn" type="button">📱 휴대폰에 앱 설치하기</button>
     </section>
 
     <div id="studyScreen" style="display:none">
@@ -127,6 +128,19 @@
         <button class="share-send-btn" id="shareSendBtn" type="button">카카오톡 보내기</button>
         <button class="share-cancel-btn" id="shareCancelBtn" type="button">취소</button>
       </div>
+    </div>
+  </div>
+
+  <div class="install-modal" id="installModal" aria-hidden="true">
+    <div class="install-modal-backdrop"></div>
+    <div class="install-dialog" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+      <div class="install-icon">📱</div>
+      <div class="install-title" id="installTitle">앱 설치하기</div>
+      <div class="install-text" id="installText">
+        Chrome 오른쪽 위 <strong>⋮</strong> 메뉴를 누른 뒤<br>
+        <strong>‘홈 화면에 추가’ 또는 ‘앱 설치’</strong>를 눌러주세요.
+      </div>
+      <button class="install-close-btn" id="installCloseBtn" type="button">확인</button>
     </div>
   </div>
 
@@ -557,6 +571,60 @@ document.addEventListener("touchmove", (e) => {
     e.preventDefault();
   }
 }, { passive: false });
+
+
+let deferredInstallPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  $("installBtn").classList.add("available");
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  $("installBtn").style.display = "none";
+});
+
+function isStandaloneApp(){
+  return window.matchMedia("(display-mode: standalone)").matches ||
+         window.navigator.standalone === true;
+}
+
+function openInstallGuide(){
+  $("installModal").classList.add("show");
+  $("installModal").setAttribute("aria-hidden", "false");
+}
+
+function closeInstallGuide(){
+  $("installModal").classList.remove("show");
+  $("installModal").setAttribute("aria-hidden", "true");
+}
+
+$("installBtn").onclick = async () => {
+  if(isStandaloneApp()){
+    $("installBtn").style.display = "none";
+    return;
+  }
+
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    try{
+      await deferredInstallPrompt.userChoice;
+    }catch(e){}
+    deferredInstallPrompt = null;
+    return;
+  }
+
+  openInstallGuide();
+};
+
+$("installCloseBtn").onclick = closeInstallGuide;
+
+if(isStandaloneApp()){
+  $("installBtn").style.display = "none";
+}
+
 
 renderSegments();
 renderCounts();
