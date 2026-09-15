@@ -152,7 +152,7 @@ const QUESTIONS = [
     "number": 11,
     "category": "고충처리",
     "question": "고충의 접수 방법을 알고 있나요?",
-    "answer": "1.고충처리함\n2.홈페이지게시판\n3.전화 등",
+    "answer": "1.고충처리함\n2.홈페이지 게시판\n3.전화 등",
     "qHighlights": [
       "고충의 접수 방법"
     ],
