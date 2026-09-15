@@ -113,6 +113,23 @@
     </div>
   </div>
 
+  <div class="share-modal" id="shareModal" aria-hidden="true">
+    <div class="share-modal-backdrop"></div>
+    <div class="share-dialog" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <div class="share-icon">💬</div>
+      <div class="share-title" id="shareTitle">카카오톡으로 자랑하기</div>
+      <div class="share-text">
+        카톡으로 문제를 완료했음을<br>
+        담당 사회복지사에게 자랑하세요!
+        <span class="share-note">답장은 오지 않을 수 있습니다^^;</span>
+      </div>
+      <div class="share-buttons">
+        <button class="share-send-btn" id="shareSendBtn" type="button">카카오톡 보내기</button>
+        <button class="share-cancel-btn" id="shareCancelBtn" type="button">취소</button>
+      </div>
+    </div>
+  </div>
+
 <script src="questions.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js"
   integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J"
@@ -466,9 +483,26 @@ function initKakaoShare(){
   }
 }
 
+function openShareModal(){
+  $("shareModal").classList.add("show");
+  $("shareModal").setAttribute("aria-hidden", "false");
+}
+
+function closeShareModal(){
+  $("shareModal").classList.remove("show");
+  $("shareModal").setAttribute("aria-hidden", "true");
+}
+
 $("kakaoShareBtn").onclick = () => {
-  const ok = confirm("카톡으로 문제를 완료했음을 담당 사회복지사에게 자랑하세요! 답장은 오지 않을 수 있습니다^^;");
-  if(!ok) return;
+  openShareModal();
+};
+
+$("shareCancelBtn").onclick = () => {
+  closeShareModal();
+};
+
+$("shareSendBtn").onclick = () => {
+  closeShareModal();
 
   if(!initKakaoShare()){
     alert("카카오톡 직접 공유를 위한 1회 설정이 아직 필요합니다. 카카오 JavaScript 키를 연결한 뒤 사용할 수 있습니다.");

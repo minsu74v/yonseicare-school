@@ -218,3 +218,31 @@ html, body {
   flex:0 0 38px !important;
   width:38px !important;height:38px !important;
 }
+
+
+/* 8차 추가: 카카오톡 공유 전 자체 확인창 */
+.share-modal{
+  display:none;position:fixed;inset:0;z-index:1000;
+  align-items:center;justify-content:center;padding:22px;
+}
+.share-modal.show{display:flex}
+.share-modal-backdrop{
+  position:absolute;inset:0;background:rgba(28,36,45,.42);
+}
+.share-dialog{
+  position:relative;z-index:1;width:min(100%,430px);
+  background:#fff;border-radius:20px;padding:25px 20px 20px;text-align:center;
+  box-shadow:0 18px 50px rgba(20,30,40,.22);
+}
+.share-icon{
+  width:50px;height:50px;margin:0 auto 12px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff8c7;font-size:1.4rem;
+}
+.share-title{font-size:1.12rem;font-weight:950;letter-spacing:-.03em}
+.share-text{margin-top:7px;color:#59636e;font-size:.96rem;line-height:1.65;font-weight:750}
+.share-note{display:block;margin-top:7px;color:#8a929b;font-size:.82rem;font-weight:700}
+.share-buttons{display:grid;grid-template-columns:1.35fr .65fr;gap:10px;margin-top:20px}
+.share-buttons button{min-height:56px;border-radius:14px;font-weight:900;cursor:pointer}
+.share-send-btn{border:0;background:#FEE500;color:#191919}
+.share-cancel-btn{border:1px solid #ccd3da;background:#fff;color:#59636e}
