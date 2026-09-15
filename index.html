@@ -28,7 +28,7 @@
     <div class="state-counts" aria-label="문항 상태 요약">
       <div class="state-item unseen"><span class="dot"></span><span>아직 안 봄</span><strong id="unseenCount">32</strong></div>
       <div class="state-item known"><span class="dot known"></span><span>알겠어요</span><strong id="knownCount">0</strong></div>
-      <div class="state-item review"><span class="dot review"></span><span>한 번 더 보기</span><strong id="reviewCount">0</strong></div>
+      <div class="state-item review"><span class="dot review"></span><span>다시 볼래요</span><strong id="reviewCount">0</strong></div>
     </div>
   </header>
 
@@ -73,7 +73,7 @@
 
     <div class="actions" id="actions">
       <button class="action known-btn" id="knownBtn">✓ 알겠어요</button>
-      <button class="action review-btn" id="reviewBtn">↻ 한 번 더 볼래요</button>
+      <button class="action review-btn" id="reviewBtn">↻ 다시 볼래요</button>
     </div>
 
     <div class="status" id="status"></div>
@@ -88,8 +88,8 @@
     </section>
 
     <div class="nav" id="navArea">
-      <button id="prevBtn">← 이전 문제</button>
-      <button id="nextBtn">다음 문제 →</button>
+      <button id="prevBtn" aria-label="이전 문제" title="이전 문제">←</button>
+      <button id="nextBtn" aria-label="다음 문제" title="다음 문제">→</button>
     </div>
 
     <div class="tools">
@@ -212,7 +212,7 @@ function renderQuestion(){
     $("status").className = `status ${st} show`;
     $("status").textContent = st === "known"
       ? "이 문제에는 ‘알겠어요’로 표시되어 있습니다."
-      : "이 문제에는 ‘한 번 더 보기’로 표시되어 있습니다.";
+      : "이 문제에는 ‘다시 볼래요’로 표시되어 있습니다.";
     $("status").style.display = "block";
   }
 
