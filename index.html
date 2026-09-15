@@ -46,7 +46,7 @@
       </div>
       <button class="start-btn" id="startBtn" type="button">학습 시작하기</button>
       <div class="copyright-note">© 원주연세재가복지센터. 본 학습자료의 무단 복제·배포 및 상업적 이용을 금합니다.</div>
-      <button class="install-btn" id="installBtn" type="button">📱 휴대폰에 앱 설치하기</button>
+      <button class="install-btn" id="installBtn" type="button">🌐 Chrome에서 열기</button>
     </section>
 
     <div id="studyScreen" style="display:none">
@@ -607,6 +607,23 @@ $("installBtn").onclick = async () => {
     return;
   }
 
+  const ua = navigator.userAgent || "";
+  const isAndroid = /Android/i.test(ua);
+  const isChrome = /Chrome\/|CriOS\//i.test(ua) && !/SamsungBrowser/i.test(ua);
+  const isKakao = /KAKAOTALK/i.test(ua);
+
+  // 카카오톡 인앱브라우저 등 Android에서 누르면 Chrome으로 현재 페이지를 넘깁니다.
+  if(isAndroid && (!isChrome || isKakao)){
+    const current = new URL(window.location.href);
+    const scheme = current.protocol.replace(":", "");
+    const chromeIntent =
+      "intent://" + current.host + current.pathname + current.search + current.hash +
+      "#Intent;scheme=" + scheme + ";package=com.android.chrome;end";
+    window.location.href = chromeIntent;
+    return;
+  }
+
+  // 이미 Chrome으로 연 상태이고 설치가 가능하면 실제 설치창을 띄웁니다.
   if(deferredInstallPrompt){
     deferredInstallPrompt.prompt();
     try{
@@ -616,6 +633,11 @@ $("installBtn").onclick = async () => {
     return;
   }
 
+  $("installTitle").textContent = "Chrome에서 열기";
+  $("installText").innerHTML =
+    "현재 이미 Chrome으로 열려 있거나<br>" +
+    "자동 전환을 지원하지 않는 환경입니다.<br><br>" +
+    "Chrome 메뉴에서 <strong>‘앱 설치’ 또는 ‘홈 화면에 추가’</strong>를 눌러주세요.";
   openInstallGuide();
 };
 
